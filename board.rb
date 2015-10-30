@@ -1,22 +1,26 @@
 class Board
   attr_reader :board
 
-  def initialize(board_width = 9, board_height = 9, mine_count = 10)
-    @board = Array.new(board_height) { Array.new(board_width) }
+  def initialize(col_count = 9, row_count = 9, mine_count = 10)
+    @board = Array.new(col_count) { Array.new(row_count) }
     @mine_count = mine_count
+    @col_count = col_count
+    @row_count = row_count
   end
 
   def populate
-    prev_rand_locations = []
+    positions = create_positions
+    positions.each { |positions| self[position] = :X }
+  end
 
-    mine_count.times do
-      random_location = self[rand(@board.size), rand(@board[0].size)]
+  def create_positions
+    positions = []
 
-      while random_location == :*
-        random_location = self[rand(@board.size), rand(@board[0].size)]
-      end
-      random_location = :*
+    until rand_locations.size == mine_count
+      rand_pos = [rand(@row_count), rand(@col_count)]
+      positions << rand_pos unless positions.include?(rand_pos)
     end
+    positions
   end
 
   def [](row, col)
